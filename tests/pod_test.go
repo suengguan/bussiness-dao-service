@@ -2,7 +2,6 @@ package test
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	"strings"
@@ -17,10 +16,12 @@ const (
 	pod_base_url = "http://localhost:8080/v1/pod"
 )
 
-func init() {
-	//orm.RegisterDriver("mysql", orm.DRMySQL)
-	//orm.RegisterDataBase("default", "mysql", "root:corex123@tcp(localhost:3306)/PME?charset=utf8")
+func Test_Pod_GetById(t *testing.T) {
+	var res *http.Response
+	var err error
+	var resBody []byte
 
+	// create pod
 	o := orm.NewOrm()
 	o.Using("PME")
 
@@ -28,7 +29,7 @@ func init() {
 	num, err := o.Raw("SELECT ID FROM POD_T WHERE ID = ?", 1).Values(&maps)
 
 	if err != nil {
-		fmt.Println("get pod failed!", err)
+		t.Log("get pod failed!", err)
 		return
 	}
 
@@ -36,25 +37,19 @@ func init() {
 		// create pod
 		_, err := o.Raw("insert into POD_T(ID, MODULE_ID) values(1, 1)").Exec()
 		if err != nil {
-			fmt.Println("insert pod failed!", err)
+			t.Log("insert pod failed!", err)
 			return
 		}
-		fmt.Println("create pod success!")
+		t.Log("create pod success!")
 	} else if num == 1 {
 		// pod is existed, nothing todo
-		fmt.Println("pod is already exited")
+		t.Log("pod is already exited")
 		return
 	} else {
 		// error
-		fmt.Println("get pod failed!", err, num)
+		t.Log("get pod failed!", err, num)
 		return
 	}
-}
-
-func Test_Pod_GetById(t *testing.T) {
-	var res *http.Response
-	var err error
-	var resBody []byte
 
 	// get pod by id
 	res, err = http.Get(pod_base_url + "/id/1")

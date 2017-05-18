@@ -3,7 +3,6 @@ package test
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	"strconv"
@@ -20,10 +19,8 @@ const (
 	project_base_url = "http://localhost:8080/v1/project"
 )
 
-func init() {
-	//orm.RegisterDriver("mysql", orm.DRMySQL)
-	//orm.RegisterDataBase("default", "mysql", "root:corex123@tcp(localhost:3306)/PME?charset=utf8")
-
+func Test_Project_Create(t *testing.T) {
+	// create user
 	o := orm.NewOrm()
 	o.Using("PME")
 
@@ -31,7 +28,7 @@ func init() {
 	num, err := o.Raw("SELECT ID FROM USER_T WHERE ID = ?", 1).Values(&maps)
 
 	if err != nil {
-		fmt.Println("get user failed!", err)
+		t.Log("get user failed!", err)
 		return
 	}
 
@@ -39,21 +36,21 @@ func init() {
 		// create user
 		_, err := o.Raw("insert into USER_T(ID) values(1)").Exec()
 		if err != nil {
-			fmt.Println("insert user failed!", err)
+			t.Log("insert user failed!", err)
 			return
 		}
+		t.Log("create project success!")
 	} else if num == 1 {
 		// user is existed, nothing todo
-		fmt.Println("user is already exited")
+		t.Log("user is already exited")
 		return
 	} else {
 		// error
-		fmt.Println("get user failed!", err, num)
+		t.Log("get user failed!", err, num)
 		return
 	}
-}
 
-func Test_Project_Create(t *testing.T) {
+	// create project
 	var project model.Project
 	var user model.User
 	user.Id = 1
