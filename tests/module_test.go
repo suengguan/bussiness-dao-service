@@ -38,6 +38,7 @@ func init() {
 			fmt.Println("insert module failed!", err)
 			return
 		}
+		fmt.Println("create module success!")
 	} else if num == 1 {
 		// module is existed, nothing todo
 		fmt.Println("module is already exited")

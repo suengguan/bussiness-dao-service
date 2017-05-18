@@ -39,6 +39,7 @@ func init() {
 			fmt.Println("insert pod failed!", err)
 			return
 		}
+		fmt.Println("create pod success!")
 	} else if num == 1 {
 		// pod is existed, nothing todo
 		fmt.Println("pod is already exited")
